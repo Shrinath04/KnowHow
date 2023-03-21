@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoology</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="../server/routes/router.js"></script>
+    <script src="https://kit.fontawesome.com/16186e0e3e.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="dimElement">
+            <nav>
+                <form method="GET" action="/api/users/logout" id="logout-form"><button class="logout-btn"><i
+                            class="fa fa-sign-out" aria-hidden="true"></i></button></form>
+                <b class="navbar-header" id="project-title"><i class="fa fa-book navbar-icon"
+                        aria-hidden="true"></i>&nbsp &nbspKnow-How</b>
+                <b class="navbar-description" id="project-description">Discussion Forum &nbsp &nbsp<i class="fa fa-user"
+                        aria-hidden="true"></i></b>
+
+            </nav>
+        </header>
+        <div class="subject-navigation dimElement">
+            <form method="GET" action="/find/englishQues"> <input type="hidden"><button
+                    class="subject-btn">English</button><br></form>
+            <form method="GET" action="/find/mathsQues"> <input type="hidden"><button
+                    class="subject-btn">Maths</button><br></form>
+            <form method="GET" action="/find/physicsQues"> <input type="hidden"><button
+                    class="subject-btn">Physics</button><br></form>
+            <form method="GET" action="/find/chemistryQues"> <input type="hidden"><button
+                    class="subject-btn">Chemistry</button><br></form>
+            <form method="GET" action="/find/botanyQues"> <input type="hidden"><button
+                    class="subject-btn">Botany</button><br></form>
+            <form method="GET" action="/find/zoologyQues"> <input type="hidden"><button
+                    class="subject-btn">Zoology</button><br></form>
+            <form method="GET" action="/find/computerQues"> <input type="hidden"><button
+                    class="subject-btn">Computer</button><br></form>
+        </div>
+        <div class="questions-form-box dimElement">
+            <h2 id="question-title">Zoology Discussion</h2>
+
+            <form action="/findOne/zoologyQues" method="POST">
+                <div class="questions-input-group" id="inputBox">
+                    <div class="input-field" id="nameField">
+                        &nbsp&nbsp
+                        <i class="fa-solid fa-question"></i>
+                        <input type="text" placeholder="Search Your Question" name="questionSearched"  id="searchBarId">
+                    </div>
+                    <div class="question-scroll">
+                        <% if(err && (err==="quesNotFound" || (err === "contentEmpty"))){ %>
+                            <% if(err == "quesNotFound"){ %>
+                            <h2 style="text-align:center;">Sorry, Question not found!&nbsp;&nbsp;<i class="fa fa-folder-open"></i></h2>
+                            <% }else if(err == "contentEmpty"){ %>
+                                <h2 style="text-align:center;">Content cannot be empty!&nbsp;&nbsp;<i class="fa fa-folder-open"></i></h2>
+                            <% }}else{ %>
+                                <% if(pqid && questions){ %>
+                                    <% for(var i=0; i<pqid.length;i++){ %>
+                                        <ol>
+                                            <li class="questions-li">
+                                                <%= questions[i]%> <button type="button" id="<%= pqid[i]%>"
+                                                        class="answer-btn" onclick="addAns(this.id)">Answer</button>
+                                            </li>
+                                            <div class="each-ques">
+                                                <ul>
+                                                    <% for (let [key, value] of ansMap.entries()) {%>
+                                                        <% if(key==pqid[i]){ %>
+                                                            <% for(var j=0 ;j<value.length; j++){ %>
+                                                                <li>&emsp;&ensp;<%=j+1%>.&nbsp;&nbsp;<%=value[j] %>
+                                                                </li><br>
+                                                                <% }}} %>
+                                                </ul>
+                                            </div>
+                                            <hr>
+                                        </ol>
+                            <% }}} %>
+                    </div>
+                </div>
+                <br>
+                <div class="question-btn-field">
+                    <button type="submit" id="question-search"><i class="fa fa-search"
+                            aria-hidden="true"></i>&nbsp;Search</button>
+                    <button type="button" id="add-ques-btn" onclick="addQues()"><i class="fa fa-plus"
+                            aria-hidden="true"></i>&nbsp;Add</button>
+                    <button type="button" id="translate-btn">Translate</button>
+                    <button type="button" onclick="voiceToText()" id="mic-btn"><i class="fa fa-microphone" aria-hidden="true"></i></button>
+                </div>
+            </form>
+        </div>
+        <div class="addQues-form-box" id="addQues-form-popup">
+            <button id="popup-close-btn" onclick="closePopupQues()">&times;</button>
+            <h1 id="popup-title">Add Question</h1>
+            <form action="/api/questions/zoo" method="POST">
+                <div class="input-group" id="inputBox">
+                    <div class="addQues-input-field">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="text" name="question" placeholder="Add your Question">
+                    </div><br>
+                    <div class="btn-field">
+                        <button type="submit" id="signinBtn">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="addAns-form-box" id="addAns-form-popup">
+            <button id="popup-close-btn" onclick="closePopupAns()">&times;</button>
+            <h1 id="popup-title">Add Answer</h1>
+            <form action="/api/answers/zoo" method="POST">
+                <div class="input-group" id="inputBox">
+                    <div class="addQues-input-field">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="text" name="answer" placeholder="Add your Answer">
+                        <input type="hidden" id="hiddenQuesId" name="hiddenQuesId" value="">
+                    </div><br>
+                    <div class="btn-field">
+                        <button type="submit" id="signinBtn">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+    <script>
+        var popupQues = document.getElementsByClassName("addQues-form-box")[0];
+        var popupAns = document.getElementsByClassName("addAns-form-box")[0];
+        var element1 = document.getElementsByClassName("dimElement")[1];
+        var element2 = document.getElementsByClassName("dimElement")[2];
+
+        function addQues() {
+            element1.setAttribute("id", "dim")
+            element2.setAttribute("id", "dim")
+            popupQues.setAttribute("id", "show");
+        }
+        function closePopupQues() {
+            popupQues.removeAttribute("id");
+            element1.removeAttribute("id");
+            element2.removeAttribute("id");
+        }
+
+        function addAns(id) {
+            element1.setAttribute("id", "dim")
+            element2.setAttribute("id", "dim")
+            popupAns.setAttribute("id", "show");
+            var hiddenQues = document.getElementById("hiddenQuesId");
+            hiddenQues.value = id;
+        }
+
+        function closePopupAns() {
+            popupAns.removeAttribute("id");
+            element1.removeAttribute("id");
+            element2.removeAttribute("id");
+        }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: "en,ta,bn,hi,kn,ta,ml,te", layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'translate-btn');
+        }
+
+        function voiceToText() {
+            var searchBar = document.getElementById("searchBarId");
+            searchBar.placeholder = "Listening..."
+            var recognition = new webkitSpeechRecognition();
+
+            // Set the recognition parameters
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
+
+            // Handle the recognition results
+            recognition.onresult = function (e) {
+                var result = e.results[e.results.length - 1];
+                var transcript = result[0].transcript;
+                var isFinal = result.isFinal;
+
+                if (isFinal) {
+                    transcript+="?"
+                    searchBar.value = transcript.toLowerCase();
+                }
+            };
+
+            // Handle recognition errors
+            recognition.onerror = function (e) {
+                console.log('Recognition error:', e);
+            };
+
+            // Start the recognition
+            recognition.start();
+        }
+    </script>
+</body>
+
+</html>

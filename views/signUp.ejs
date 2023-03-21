@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://kit.fontawesome.com/16186e0e3e.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <b class="navbar-header"  id="project-title"><i class="fa fa-book navbar-icon" aria-hidden="true"></i>&nbsp &nbspKnow-How</b>
+                <b class="navbar-description" id="project-description">Discussion Forum &nbsp &nbsp<i class="fa fa-user" aria-hidden="true"></i></b>
+            </nav>  
+        </header>
+        <div class="form-box">
+            <h1 id="title">Sign-Up</h1>
+            <form action="/api/users/signup" method="POST">
+                <div class="signup-input-group" id="inputBox">
+                    <div class="login-input-field" id="nameField">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" name = "name" placeholder="Name">
+                    </div>
+                    <div class="login-input-field">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" name = "email" placeholder="Email">
+                    </div>
+                    <div class="login-input-field">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" name="password" placeholder="Password">
+                    </div>
+                </div>
+                <br>
+                <div class="btn-field">
+                    <button type="submit" id="signinBtn">Sign Up</button>
+                </div>
+            </form>
+            <br>
+            <b>Already a User? <a href="/">Login!</a></b>
+        </div>
+    </div>
+</body>
+
+</html>
